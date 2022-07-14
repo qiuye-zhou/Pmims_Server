@@ -3,7 +3,7 @@ var dbConfig = require('../util/dbconfig')
 
 
 //获取用户信息
-let getUser = (req,res) => {
+let getUser = (req, res) => {
     let id = req.query.id
     var sql = 'select name,sex,integral,department,jiontime from personal where id=?'
     var sqlArr = [id]
@@ -17,11 +17,11 @@ let getUser = (req,res) => {
             })
         }
     }
-    dbConfig.sqlConnect(sql, sqlArr,callBack)
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
 //获取个人用户的所有获奖信息
-let getawards = (req,res) => {
+let getawards = (req, res) => {
     let id = req.query.id
     var sql = 'select * from awards where id=?'
     var sqlArr = [id]
@@ -35,17 +35,17 @@ let getawards = (req,res) => {
             })
         }
     }
-    dbConfig.sqlConnect(sql, sqlArr,callBack)
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
 //获取个人的积分排名
-let getintegral_rank = async (req,res) => {
+let getintegral_rank = async (req, res) => {
     let id = req.query.id
     let integral = await getintegral(id)
     integral = integral[0].integral
     let num = await getintegralall(integral)
     let all_num = await getpeople_num()
-    let exceed = ((all_num[0].peo_num - num[0].num)/(all_num[0].peo_num - 1)) * 100
+    let exceed = ((all_num[0].peo_num - num[0].num) / (all_num[0].peo_num - 1)) * 100
     var sql = `select count(id) as rank from personal where department='管理员' and integral>${integral}`
     var sqlArr = [id]
     var callBack = (err, data) => {
@@ -56,7 +56,7 @@ let getintegral_rank = async (req,res) => {
                 rank: ++data[0].rank,
                 equal: num[0].num - 1,
                 allnum: all_num[0].peo_num,
-                exceed: exceed.toString().substring(0,5)
+                exceed: exceed.toString().substring(0, 5)
             }
             res.send({
                 code: 200,
@@ -64,11 +64,11 @@ let getintegral_rank = async (req,res) => {
             })
         }
     }
-    dbConfig.sqlConnect(sql, sqlArr,callBack)
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
 //获取所有的活动信息，以及个人用户参加了的活动的信息
-let getactivity = async (req,res) => {
+let getactivity = async (req, res) => {
     let id = req.query.id
     var sql = 'select activ_id,activ_name,activ_time,activ_result from activity'
     var sqlArr = []
@@ -84,11 +84,11 @@ let getactivity = async (req,res) => {
             })
         }
     }
-    dbConfig.sqlConnect(sql, sqlArr,callBack)
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
 //获取activ_id 的全部详细信息
-let getactivitywhole = async (req,res) => {
+let getactivitywhole = async (req, res) => {
     let activ_id = req.query.activ_id
     var sql = 'select * from activity where activ_id=?'
     var sqlArr = [activ_id]
@@ -102,7 +102,50 @@ let getactivitywhole = async (req,res) => {
             })
         }
     }
-    dbConfig.sqlConnect(sql, sqlArr,callBack)
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
+//操作
+//用户参加某个活动
+let join_active = async (req, res) => {
+    let id = req.query.id
+    let activ_id = req.query.activ_id
+    let result = await getactiv_join(activ_id)
+    result = result[0].activ_result
+    let result_user = await getuser_activ(id, activ_id)
+    result_user = result_user[0].result
+    if (!result) {
+        if (!result_user) {
+            let sql = `insert into details(id,activ_id,deta_evaluation,deta_win) value(?,?,?,?)`;
+            // INSERT INTO `details`(`id`, `activ_id`, `deta_evaluation`, `deta_win`) VALUES ([value-1],[value-2],[value-3],[value-4])
+            let sqlArr = [id, activ_id, '', 0];
+            let res_join = await dbConfig.SySqlConnect(sql, sqlArr);
+            if (res_join.affectedRows == 1) {
+                res.send({
+                    code: 200,
+                    msg: '成功参加活动，请按时参加活动'
+                })
+            } else {
+                res.send({
+                    code: 400,
+                    msg: '出现错误'
+                })
+            }
+        } else {
+            res.send({
+                code: 400,
+                msg: '你已参加活动，不能再参加'
+            })
+        }
+    } else {
+        res.send({
+            code: 400,
+            msg: '活动已结束'
+        })
+    }
+    // let sql = `insert into user(username,userpic,phone,create_time) value(?,?,?,?)`;
+    // let sqlArr = [phone,userpic,phone,(new Date().valueOf())];
+    // let res = await dbConfig.SySqlConnect(sql,sqlArr);
 }
 
 //非请求————方法
@@ -133,11 +176,25 @@ let getpeople_num = () => {
     return dbConfig.SySqlConnect(sql)
 }
 
+//获取某个活动是否结束(是否可以参加)
+let getactiv_join = (activ_id) => {
+    var sql = 'select activ_result from activity where activ_id=?'
+    var sqlArr = [activ_id]
+    return dbConfig.SySqlConnect(sql, sqlArr)
+}
+
+//获取该用户是否已经参加此活动
+let getuser_activ = (id, activ_id) => {
+    var sql = 'select count(id) as result from details where id=? and activ_id=?'
+    var sqlArr = [id, activ_id]
+    return dbConfig.SySqlConnect(sql, sqlArr)
+}
+
 //——————————
 
 //echarts数据
 //活动总数量/该用户参加活动的数量——pie
-let getechartspie = async (req,res) => {
+let getechartspie = async (req, res) => {
     let id = req.query.id
     let active_num = await getallactive_pie()
     var sql = 'select count(activ_id) as join_num from details where id=?'
@@ -156,7 +213,7 @@ let getechartspie = async (req,res) => {
             })
         }
     }
-    dbConfig.sqlConnect(sql, sqlArr,callBack)
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
 //非请求————方法
@@ -173,4 +230,5 @@ module.exports = {
     getactivitywhole,
     getechartspie,
     getintegral_rank,
+    join_active,
 }

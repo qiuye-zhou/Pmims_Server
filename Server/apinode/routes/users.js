@@ -15,4 +15,6 @@ router.post('/getactivitywhole',User.getactivitywhole)
 router.post('/getechartspie',User.getechartspie)
 router.post('/getintegral_rank',User.getintegral_rank)
 
+router.post('/join_active',User.join_active)
+
 module.exports = router;
