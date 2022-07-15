@@ -112,9 +112,9 @@ let join_active = async (req, res) => {
     let activ_id = req.query.activ_id
     let result = await getactiv_join(activ_id)
     result = result[0].activ_result
-    let result_user = await getuser_activ(id, activ_id)
-    result_user = result_user[0].result
     if (!result) {
+        let result_user = await getuser_activ(id, activ_id)
+        result_user = result_user[0].result
         if (!result_user) {
             let sql = `insert into details(id,activ_id,deta_evaluation,deta_win) value(?,?,?,?)`;
             // INSERT INTO `details`(`id`, `activ_id`, `deta_evaluation`, `deta_win`) VALUES ([value-1],[value-2],[value-3],[value-4])
