@@ -16,5 +16,6 @@ router.post('/getechartspie',User.getechartspie)
 router.post('/getintegral_rank',User.getintegral_rank)
 
 router.post('/join_active',User.join_active)
+router.post('/activ_evaluate',User.activ_evaluate)
 
 module.exports = router;

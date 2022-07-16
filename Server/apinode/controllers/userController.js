@@ -111,13 +111,12 @@ let join_active = async (req, res) => {
     let id = req.query.id
     let activ_id = req.query.activ_id
     let result = await getactiv_join(activ_id)
-    result = result[0].activ_result
-    if (!result) {
+    // result = result[0].activ_result
+    if (result.length > 0 && !result[0].activ_result) {
         let result_user = await getuser_activ(id, activ_id)
-        result_user = result_user[0].result
-        if (!result_user) {
+        // result_user = result_user[0].result
+        if (result_user.length > 0 && !result_user[0].result) {
             let sql = `insert into details(id,activ_id,deta_evaluation,deta_win) value(?,?,?,?)`;
-            // INSERT INTO `details`(`id`, `activ_id`, `deta_evaluation`, `deta_win`) VALUES ([value-1],[value-2],[value-3],[value-4])
             let sqlArr = [id, activ_id, '', 0];
             let res_join = await dbConfig.SySqlConnect(sql, sqlArr);
             if (res_join.affectedRows == 1) {
@@ -143,9 +142,53 @@ let join_active = async (req, res) => {
             msg: '活动已结束'
         })
     }
-    // let sql = `insert into user(username,userpic,phone,create_time) value(?,?,?,?)`;
-    // let sqlArr = [phone,userpic,phone,(new Date().valueOf())];
-    // let res = await dbConfig.SySqlConnect(sql,sqlArr);
+}
+
+//用户活动评价(活动结束后评价)
+let activ_evaluate = async (req, res) => {
+    let id = req.query.id
+    let activ_id = req.query.activ_id
+    let join_activ = await getuser_activ(id, activ_id)
+    if (join_activ.length > 0 && join_activ[0].result) {
+        let activ_res = await getactiv_join(activ_id)
+        if (activ_res.length > 0 && activ_res[0].activ_result) {
+            let evaluate_x_res = await getuser_evaluate_x(id, activ_id)
+            if (evaluate_x_res[0].deta_evaluation === '') {
+                let evaluate_x = req.query.evaluate_x
+                let sql = `UPDATE details SET deta_evaluation=? WHERE id=? and activ_id=?`;
+                let sqlArr = [evaluate_x,id, activ_id];
+                let res_join = await dbConfig.SySqlConnect(sql, sqlArr);
+                if (res_join.affectedRows == 1) {
+                    res.send({
+                        code: 200,
+                        msg: '评价完成'
+                    })
+                } else {
+                    res.send({
+                        code: 400,
+                        msg: '出现错误'
+                    })
+                }
+
+            } else {
+                res.send({
+                    code: 400,
+                    msg: '已评价'
+                })
+            }
+
+        } else {
+            res.send({
+                code: 400,
+                msg: '活动未结束'
+            })
+        }
+    } else {
+        res.send({
+            code: 400,
+            msg: '没有参加该活动'
+        })
+    }
 }
 
 //非请求————方法
@@ -176,7 +219,7 @@ let getpeople_num = () => {
     return dbConfig.SySqlConnect(sql)
 }
 
-//获取某个活动是否结束(是否可以参加)
+//获取某个活动是否结束
 let getactiv_join = (activ_id) => {
     var sql = 'select activ_result from activity where activ_id=?'
     var sqlArr = [activ_id]
@@ -186,6 +229,13 @@ let getactiv_join = (activ_id) => {
 //获取该用户是否已经参加此活动
 let getuser_activ = (id, activ_id) => {
     var sql = 'select count(id) as result from details where id=? and activ_id=?'
+    var sqlArr = [id, activ_id]
+    return dbConfig.SySqlConnect(sql, sqlArr)
+}
+
+//获取用户是否评价
+let getuser_evaluate_x = (id, activ_id) => {
+    var sql = 'select deta_evaluation from details where id=? and activ_id=?'
     var sqlArr = [id, activ_id]
     return dbConfig.SySqlConnect(sql, sqlArr)
 }
@@ -231,4 +281,5 @@ module.exports = {
     getechartspie,
     getintegral_rank,
     join_active,
+    activ_evaluate,
 }
