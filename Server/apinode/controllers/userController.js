@@ -56,7 +56,7 @@ let getintegral_rank = async (req, res) => {
                 rank: ++data[0].rank,
                 equal: num[0].num - 1,
                 allnum: all_num[0].peo_num,
-                exceed: exceed.toString().substring(0, 5)
+                exceed: parseFloat(exceed.toString().substring(0, 5))
             }
             res.send({
                 code: 200,
