@@ -1,7 +1,7 @@
 var dbConfig = require('../util/dbconfig')
 
 //admin获取用户信息列表
-let getuser_list = (req,res) => {
+let getuser_list = (req, res) => {
     var sql = `select name,sex,integral,department,jiontime from personal where department!='管理员'`
     var sqlArr = []
     var callBack = (err, data) => {
@@ -14,12 +14,53 @@ let getuser_list = (req,res) => {
             })
         }
     }
-    dbConfig.sqlConnect(sql, sqlArr,callBack)
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
+//发布活动
+let add_activ = async (req, res) => {
+    let activ_name = req.query.activ_name
+    let activ_time = req.query.activ_time
+    let activ_integral = req.query.activ_integral
+    let activ_describe = req.query.activ_describe
+    let form = req.query.form
+    let newtime = new Date()
+    let ac_time = new Date()
+    let act_time_arr = activ_time.split('-')
+    ac_time.setFullYear(act_time_arr[0], act_time_arr[1] - 1, act_time_arr[2])
+    if (ac_time > newtime) {
+        var sql = `INSERT INTO activity(activ_name, activ_time, activ_integral, activ_describe, form) VALUES (?,?,?,?,?)`
+        var sqlArr = [activ_name, activ_time, activ_integral, activ_describe, form]
+        let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
+        if (res.add) {
+            if (res_add.affectedRows == 1) {
+                res.send({
+                    code: 200,
+                    msg: '活动发布成功'
+                })
+            } else {
+                res.send({
+                    code: 400,
+                    msg: '出现错误'
+                })
+            }
+        } else {
+            res.send({
+                code: 400,
+                msg: '活动发布失败'
+            })
+        }
+    } else {
+        res.send({
+            code: 400,
+            msg: '时间设置错误'
+        })
+    }
 }
 
 //echarts数据
 //用户参加活动率(用户参加活动总数量 / 活动总数量*用户数量)——pie
-let getechartspie_useractiv = async (req,res) => {
+let getechartspie_useractiv = async (req, res) => {
     let user_num = await getusers_num()
     let activ_num = await getactiv_num()
     let users_join_num = await getusers_join()
@@ -57,4 +98,5 @@ let getusers_join = () => {
 module.exports = {
     getuser_list,
     getechartspie_useractiv,
+    add_activ,
 }

@@ -12,10 +12,11 @@ router.post('/getawards',User.getawards)
 router.post('/getactivity',User.getactivity)
 router.post('/getactivitywhole',User.getactivitywhole)
 
-router.post('/getechartspie',User.getechartspie)
-router.post('/getintegral_rank',User.getintegral_rank)
-
 router.post('/join_active',User.join_active)
 router.post('/activ_evaluate',User.activ_evaluate)
+
+//echarts数据
+router.post('/getechartspie',User.getechartspie)
+router.post('/getintegral_rank',User.getintegral_rank)
 
 module.exports = router;

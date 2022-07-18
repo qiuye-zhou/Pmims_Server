@@ -4,6 +4,9 @@ var Admin = require('../controllers/adminController')
 
 router.post('/getuser_list',Admin.getuser_list)
 
+router.post('/add_activ',Admin.add_activ)
+
+//echarts数据
 router.post('/getechartspie_useractiv',Admin.getechartspie_useractiv)
 
 module.exports = router
