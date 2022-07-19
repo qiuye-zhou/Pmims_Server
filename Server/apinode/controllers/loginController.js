@@ -1,4 +1,5 @@
 var dbConfig = require('../util/dbconfig')
+var token = require('../util/token')
 
 //用户登入
 let getlogin = (req, res) => {
@@ -26,10 +27,12 @@ let getlogin = (req, res) => {
                 id: data[0].id, 
                 grade: data[0].grade 
             }
+            const newtoken = token.getToken(result)
             res.send({
                 code: 200,
                 msg: '登入成功',
-                data: result
+                data: result,
+                token: newtoken
             })
         }
 
@@ -38,7 +41,18 @@ let getlogin = (req, res) => {
     dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
+//测试用token api
+let cstoken = (req,res) => {
+    let cs = req.body.cstoken
+
+    res.send({
+        code: 200,
+        cs: cs,
+        msg: 'token'
+    })
+}
 
 module.exports = {
-    getlogin
+    getlogin,
+    cstoken
 }

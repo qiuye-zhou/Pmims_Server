@@ -6,8 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var adminRouter = require('./routes/admin')
-
+var adminRouter = require('./routes/admin');
 
 var app = express();
 
@@ -15,7 +14,7 @@ var http = require('http');
 var server = http.createServer(app);
 
 //解决跨域问题，在加载路由之前使用
-app.all('*', function(req, res, next) {
+app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
@@ -35,6 +34,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//中间件——token验证 (除了登入页面都需要验证token)
+var token = require('./util/token')
+app.use((req, res, next) => {
+  const verifydata = token.verifyToken(req.headers.token)
+  if (req._parsedUrl.pathname != '/login') {
+    if (verifydata.result) {
+      next()
+    } else {
+      res.send({
+        code: 400,
+        msg: 'token已失效'
+      })
+    }
+  } else {
+    next()
+  }
+})
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -42,7 +58,7 @@ app.use('/admin', adminRouter)
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
@@ -57,6 +73,6 @@ app.use(function(req, res, next) {
 //   res.render('error');
 // });
 
-server.listen('3300',() => {
+server.listen('3300', () => {
   console.log('server: http://localhost:3300');
 })

@@ -10,4 +10,7 @@ var Login = require('../controllers/loginController')
 //登入
 router.post('/login',Login.getlogin)
 
+//测试用 --- token
+router.post('/cstoken',Login.cstoken)
+
 module.exports = router;
