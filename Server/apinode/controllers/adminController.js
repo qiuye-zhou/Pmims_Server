@@ -19,11 +19,11 @@ let getuser_list = (req, res) => {
 
 //发布活动
 let add_activ = async (req, res) => {
-    let activ_name = req.query.activ_name
-    let activ_time = req.query.activ_time
-    let activ_integral = req.query.activ_integral
-    let activ_describe = req.query.activ_describe
-    let form = req.query.form
+    let activ_name = req.body.activ_name
+    let activ_time = req.body.activ_time
+    let activ_integral = req.body.activ_integral
+    let activ_describe = req.body.activ_describe
+    let form = req.body.form
     let newtime = new Date()
     let ac_time = new Date()
     let act_time_arr = activ_time.split('-')
@@ -31,8 +31,8 @@ let add_activ = async (req, res) => {
     if (ac_time > newtime) {
         var sql = `INSERT INTO activity(activ_name, activ_time, activ_integral, activ_describe, form) VALUES (?,?,?,?,?)`
         var sqlArr = [activ_name, activ_time, activ_integral, activ_describe, form]
-        let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
-        if (res.add) {
+        try {
+            let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
             if (res_add.affectedRows == 1) {
                 res.send({
                     code: 200,
@@ -44,7 +44,7 @@ let add_activ = async (req, res) => {
                     msg: '出现错误'
                 })
             }
-        } else {
+        } catch (error) {
             res.send({
                 code: 400,
                 msg: '活动发布失败'

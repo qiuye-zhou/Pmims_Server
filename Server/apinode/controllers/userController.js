@@ -154,7 +154,7 @@ let activ_evaluate = async (req, res) => {
         if (activ_res.length > 0 && activ_res[0].activ_result) {
             let evaluate_x_res = await getuser_evaluate_x(id, activ_id)
             if (evaluate_x_res[0].deta_evaluation === '') {
-                let evaluate_x = req.query.evaluate_x
+                let evaluate_x = req.body.evaluate_x
                 let sql = `UPDATE details SET deta_evaluation=? WHERE id=? and activ_id=?`;
                 let sqlArr = [evaluate_x,id, activ_id];
                 let res_join = await dbConfig.SySqlConnect(sql, sqlArr);

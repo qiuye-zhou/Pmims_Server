@@ -2,8 +2,8 @@ var dbConfig = require('../util/dbconfig')
 
 //用户登入
 let getlogin = (req, res) => {
-    let number = req.query.number
-    let password = req.query.password
+    let number = req.body.number
+    let password = req.body.password
     var sql = 'select * from account where number=? and password=?'
     var sqlArr = [number, password]
     var callBack = (err, data) => {
