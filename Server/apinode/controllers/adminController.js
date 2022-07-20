@@ -58,6 +58,28 @@ let add_activ = async (req, res) => {
     }
 }
 
+//查询所有参加某个活动的用户
+let getjoin_activ_user = (req,res) => {
+    let ac_id = req.body.activ_id
+    var sql = `select d.id,p.name,p.sex,d.deta_evaluation,d.deta_win from details as d join personal as p on d.id = p.id where d.activ_id=?`
+    var sqlArr = [ac_id]
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            let result = data
+            result.forEach(e => {
+                e.deta_win = e.deta_win == 0 ? false : true
+            });
+            res.send({
+                code: 200,
+                data: result
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
 //echarts数据
 //用户参加活动率(用户参加活动总数量 / 活动总数量*用户数量)——pie
 let getechartspie_useractiv = async (req, res) => {
@@ -99,4 +121,5 @@ module.exports = {
     getuser_list,
     getechartspie_useractiv,
     add_activ,
+    getjoin_activ_user,
 }
