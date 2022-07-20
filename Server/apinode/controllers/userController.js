@@ -88,7 +88,7 @@ let getactivity = async (req, res) => {
 }
 
 //获取activ_id 的全部详细信息
-let getactivitywhole = async (req, res) => {
+let getactivitywhole = (req, res) => {
     let activ_id = req.query.activ_id
     var sql = 'select * from activity where activ_id=?'
     var sqlArr = [activ_id]

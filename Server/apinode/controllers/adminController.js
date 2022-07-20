@@ -17,6 +17,64 @@ let getuser_list = (req, res) => {
     dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
+//admin获取所有的简易活动信息
+let getactiv_all = (req,res) => {
+    var sql = 'select activ_id,activ_name,activ_time,activ_result from activity'
+    var sqlArr = []
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            res.send({
+                code: 200,
+                data: data
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
+//获取activ_id 的全部详细信息
+let getactivitywhole = (req, res) => {
+    let activ_id = req.query.activ_id
+    var sql = 'select * from activity where activ_id=?'
+    var sqlArr = [activ_id]
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            res.send({
+                code: 200,
+                data: data
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
+//查询所有参加某个活动的用户的有关信息
+let getjoin_activ_user = (req,res) => {
+    let ac_id = req.body.activ_id
+    var sql = `select d.id,p.name,p.sex,d.deta_evaluation,d.deta_win from details as d join personal as p on d.id = p.id where d.activ_id=?`
+    var sqlArr = [ac_id]
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            let result = data
+            result.forEach(e => {
+                e.deta_win = e.deta_win == 0 ? false : true
+            });
+            res.send({
+                code: 200,
+                data: result
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
+//操作
 //发布活动
 let add_activ = async (req, res) => {
     let activ_name = req.body.activ_name
@@ -56,28 +114,6 @@ let add_activ = async (req, res) => {
             msg: '时间设置错误'
         })
     }
-}
-
-//查询所有参加某个活动的用户
-let getjoin_activ_user = (req,res) => {
-    let ac_id = req.body.activ_id
-    var sql = `select d.id,p.name,p.sex,d.deta_evaluation,d.deta_win from details as d join personal as p on d.id = p.id where d.activ_id=?`
-    var sqlArr = [ac_id]
-    var callBack = (err, data) => {
-        if (err) {
-            console.log('--连接出错了--');
-        } else {
-            let result = data
-            result.forEach(e => {
-                e.deta_win = e.deta_win == 0 ? false : true
-            });
-            res.send({
-                code: 200,
-                data: result
-            })
-        }
-    }
-    dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
 //echarts数据
@@ -122,4 +158,6 @@ module.exports = {
     getechartspie_useractiv,
     add_activ,
     getjoin_activ_user,
+    getactivitywhole,
+    getactiv_all,
 }
