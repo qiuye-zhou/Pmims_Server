@@ -69,7 +69,7 @@ let getintegral_rank = async (req, res) => {
 
 //获取所有的活动信息，以及个人用户参加了的活动的信息
 let getactivity = async (req, res) => {
-    let id = req.query.id
+    let id = req.body.id
     var sql = 'select activ_id,activ_name,activ_time,activ_result from activity'
     var sqlArr = []
     let de = await getdetails(id)
@@ -89,7 +89,7 @@ let getactivity = async (req, res) => {
 
 //获取activ_id 的全部详细信息
 let getactivitywhole = (req, res) => {
-    let activ_id = req.query.activ_id
+    let activ_id = req.body.activ_id
     var sql = 'select * from activity where activ_id=?'
     var sqlArr = [activ_id]
     var callBack = (err, data) => {
@@ -108,8 +108,8 @@ let getactivitywhole = (req, res) => {
 //操作
 //用户参加某个活动
 let join_active = async (req, res) => {
-    let id = req.query.id
-    let activ_id = req.query.activ_id
+    let id = req.body.id
+    let activ_id = req.body.activ_id
     let result = await getactiv_join(activ_id)
     // result = result[0].activ_result
     if (result.length > 0 && !result[0].activ_result) {
@@ -146,8 +146,8 @@ let join_active = async (req, res) => {
 
 //用户活动评价(活动结束后评价)
 let activ_evaluate = async (req, res) => {
-    let id = req.query.id
-    let activ_id = req.query.activ_id
+    let id = req.body.id
+    let activ_id = req.body.activ_id
     let join_activ = await getuser_activ(id, activ_id)
     if (join_activ.length > 0 && join_activ[0].result) {
         let activ_res = await getactiv_join(activ_id)
@@ -245,7 +245,7 @@ let getuser_evaluate_x = (id, activ_id) => {
 //echarts数据
 //活动总数量/该用户参加活动的数量——pie
 let getechartspie = async (req, res) => {
-    let id = req.query.id
+    let id = req.body.id
     let active_num = await getallactive_pie()
     var sql = 'select count(activ_id) as join_num from details where id=?'
     var sqlArr = [id]
