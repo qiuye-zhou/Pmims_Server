@@ -4,7 +4,7 @@ var dbConfig = require('../util/dbconfig')
 
 //获取用户信息
 let getUser = (req, res) => {
-    let id = req.query.id
+    let id = req.body.id
     var sql = 'select name,sex,integral,department,jiontime from personal where id=?'
     var sqlArr = [id]
     var callBack = (err, data) => {
@@ -22,7 +22,7 @@ let getUser = (req, res) => {
 
 //获取个人用户的所有获奖信息
 let getawards = (req, res) => {
-    let id = req.query.id
+    let id = req.body.id
     var sql = 'select * from awards where id=?'
     var sqlArr = [id]
     var callBack = (err, data) => {
@@ -40,7 +40,7 @@ let getawards = (req, res) => {
 
 //获取个人的积分排名
 let getintegral_rank = async (req, res) => {
-    let id = req.query.id
+    let id = req.body.id
     let integral = await getintegral(id)
     integral = integral[0].integral
     let num = await getintegralall(integral)
