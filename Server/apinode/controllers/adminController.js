@@ -36,7 +36,7 @@ let getactiv_all = (req,res) => {
 
 //获取activ_id 的全部详细信息
 let getactivitywhole = (req, res) => {
-    let activ_id = req.query.activ_id
+    let activ_id = req.body.activ_id
     var sql = 'select * from activity where activ_id=?'
     var sqlArr = [activ_id]
     var callBack = (err, data) => {
