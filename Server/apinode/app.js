@@ -19,7 +19,7 @@ app.all('*', function(req, res, next) {
   // console.log(req.environ)
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   // res.header("Access-Control-Allow-Origin", '*');
-  res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+  res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With,token");
   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
   res.header("Access-Control-Allow-Credentials","true");
   res.header("X-Powered-By",' 3.2.1')
@@ -38,23 +38,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//中间件——token验证 (除了登入页面都需要验证token)
-// var token = require('./util/token')
-// app.use((req, res, next) => {
-//   const verifydata = token.verifyToken(req.headers.token)
-//   if (req._parsedUrl.pathname != '/login') {
-//     if (verifydata.result) {
-//       next()
-//     } else {
-//       res.send({
-//         code: 400,
-//         msg: 'token已失效'
-//       })
-//     }
-//   } else {
-//     next()
-//   }
-// })
+// 中间件——token验证 (除了登入页面都需要验证token)
+var token = require('./util/token')
+app.use((req, res, next) => {
+  const verifydata = token.verifyToken(req.headers.token)
+  if (req._parsedUrl.pathname != '/login') {
+    if (verifydata.result) {
+      next()
+    } else {
+      res.send({
+        code: 400,
+        msg: 'token已失效'
+      })
+    }
+  } else {
+    next()
+  }
+})
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
