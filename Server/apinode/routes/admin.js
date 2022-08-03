@@ -8,6 +8,7 @@ router.post('/getactivitywhole',Admin.getactivitywhole)
 router.post('/getactiv_all',Admin.getactiv_all)
 
 router.post('/add_activ',Admin.add_activ)
+router.post('/adduser',Admin.adduser)
 
 //echarts数据
 router.post('/getechartspie_useractiv',Admin.getechartspie_useractiv)

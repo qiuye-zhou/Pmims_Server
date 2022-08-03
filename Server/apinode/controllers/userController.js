@@ -46,7 +46,7 @@ let getintegral_rank = async (req, res) => {
     let num = await getintegralall(integral)
     let all_num = await getpeople_num()
     let exceed = ((all_num[0].peo_num - num[0].num) / (all_num[0].peo_num - 1)) * 100
-    var sql = `select count(id) as rank from personal where department='管理员' and integral>${integral}`
+    var sql = `select count(id) as rank from personal where department!='管理员' and integral>${integral}`
     var sqlArr = [id]
     var callBack = (err, data) => {
         if (err) {
