@@ -39,22 +39,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 中间件——token验证 (除了登入页面都需要验证token)
-// var token = require('./util/token')
-// app.use((req, res, next) => {
-//   const verifydata = token.verifyToken(req.headers.token)
-//   if (req._parsedUrl.pathname != '/login') {
-//     if (verifydata.result) {
-//       next()
-//     } else {
-//       res.send({
-//         code: 400,
-//         msg: 'token已失效'
-//       })
-//     }
-//   } else {
-//     next()
-//   }
-// })
+var token = require('./util/token')
+app.use((req, res, next) => {
+  const verifydata = token.verifyToken(req.headers.token)
+  if (req._parsedUrl.pathname != '/login') {
+    if (verifydata.result) {
+      next()
+    } else {
+      res.send({
+        code: 400,
+        msg: 'token已失效'
+      })
+    }
+  } else {
+    next()
+  }
+})
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
