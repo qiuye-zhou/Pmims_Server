@@ -41,7 +41,7 @@ let getawards = (req, res) => {
 //获取个人用户的所有评价信息
 let getactiv_evalue = (req, res) => {
     let id = req.body.id
-    var sql = 'select a.activ_name,a.activ_result,d.deta_evaluation,d.deta_win from details as d join activity as a on d.activ_id=a.activ_id where d.id=? order by a.activ_time desc'
+    var sql = 'select a.activ_id,a.activ_name,a.activ_result,d.deta_evaluation,d.deta_win from details as d join activity as a on d.activ_id=a.activ_id where d.id=? order by a.activ_time desc'
     var sqlArr = [id]
     var callBack = (err, data) => {
         if (err) {
