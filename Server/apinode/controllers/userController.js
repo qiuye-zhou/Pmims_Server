@@ -38,6 +38,24 @@ let getawards = (req, res) => {
     dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
+//获取个人用户的所有评价信息
+let getactiv_evalue = (req, res) => {
+    let id = req.body.id
+    var sql = 'select * from details where id=?'
+    var sqlArr = [id]
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            res.send({
+                code: 200,
+                data: data
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
 //获取个人的积分排名
 let getintegral_rank = async (req, res) => {
     let id = req.body.id
@@ -282,4 +300,5 @@ module.exports = {
     getintegral_rank,
     join_active,
     activ_evaluate,
+    getactiv_evalue,
 }

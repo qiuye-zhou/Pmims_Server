@@ -11,6 +11,7 @@ router.post('/getuser',User.getUser)
 router.post('/getawards',User.getawards)
 router.post('/getactivity',User.getactivity)
 router.post('/getactivitywhole',User.getactivitywhole)
+router.post('/getactiv_evalue',User.getactiv_evalue)
 
 router.post('/join_active',User.join_active)
 router.post('/activ_evaluate',User.activ_evaluate)
