@@ -5,7 +5,7 @@ var dbConfig = require('../util/dbconfig')
 //获取用户信息
 let getUser = (req, res) => {
     let id = req.body.id
-    var sql = 'select name,sex,integral,department,jiontime from personal where id=?'
+    var sql = 'select name,sex,integral,department,jointime from personal where id=?'
     var sqlArr = [id]
     var callBack = (err, data) => {
         if (err) {
@@ -70,7 +70,7 @@ let getintegral_rank = async (req, res) => {
 //获取所有的活动信息，以及个人用户参加了的活动的信息
 let getactivity = async (req, res) => {
     let id = req.body.id
-    var sql = 'select activ_id,activ_name,activ_time,activ_result from activity'
+    var sql = 'select activ_id,activ_name,activ_time,activ_result from activity order by activ_time desc'
     var sqlArr = []
     let de = await getdetails(id)
     var callBack = (err, data) => {
