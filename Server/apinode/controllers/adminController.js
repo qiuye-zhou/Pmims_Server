@@ -2,7 +2,24 @@ var dbConfig = require('../util/dbconfig')
 
 //admin获取用户信息列表
 let getuser_list = (req, res) => {
-    var sql = `select name,sex,integral,department,jiontime from personal where department!='管理员'`
+    var sql = `select name,sex,integral,department,jointime from personal where department!='管理员'`
+    var sqlArr = []
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            res.send({
+                code: 200,
+                data: data
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
+//admin获取所有账号信息列表
+let getall_list = (req, res) => {
+    var sql = `select a.id,a.number,a.password,a.grade,p.name,p.sex,p.integral,p.department,p.jointime from account as a join personal as p on a.id=p.id`
     var sqlArr = []
     var callBack = (err, data) => {
         if (err) {
@@ -229,4 +246,5 @@ module.exports = {
     getactivitywhole,
     getactiv_all,
     adduser,
+    getall_list,
 }

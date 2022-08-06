@@ -6,6 +6,7 @@ router.post('/getuser_list',Admin.getuser_list)
 router.post('/getjoin_activ_user',Admin.getjoin_activ_user)
 router.post('/getactivitywhole',Admin.getactivitywhole)
 router.post('/getactiv_all',Admin.getactiv_all)
+router.post('/getall_list',Admin.getall_list)
 
 router.post('/add_activ',Admin.add_activ)
 router.post('/adduser',Admin.adduser)
