@@ -133,7 +133,7 @@ let add_activ = async (req, res) => {
     }
 }
 
-//添加用户
+//添加账户
 let adduser = async (req, res) => {
     let number = req.body.number
     let password = req.body.password
@@ -187,7 +187,7 @@ let adduser = async (req, res) => {
     }
 }
 
-//修改用户信息
+//修改账户信息
 let edituser = async (req, res) => {
     let id = req.body.id
     let password = req.body.password
@@ -221,6 +221,36 @@ let edituser = async (req, res) => {
         res.send({
             code: 400,
             msg: '修改失败'
+        })
+    }
+}
+
+//删除账户信息
+let removeuser = async (req, res) => {
+    let id = req.body.id
+    let sqlawards = `DELETE FROM awards WHERE id=?`
+    let sqldetails = `DELETE FROM details WHERE id=?`
+    let sqlpersonal = `DELETE FROM personal WHERE id=?`
+    let sqlaccount = `DELETE FROM account WHERE id=?`
+    let sqlArr = [id]
+    try {
+        const resutl1 = await dbConfig.SySqlConnect(sqlawards, sqlArr);
+        const resutl2 = await dbConfig.SySqlConnect(sqldetails, sqlArr);
+        const resutl3 = await dbConfig.SySqlConnect(sqlpersonal, sqlArr);
+        if (resutl1 && resutl2 && resutl3) {
+            const resutl4 = await dbConfig.SySqlConnect(sqlaccount, sqlArr);
+            if (resutl4) {
+                res.send({
+                    code: 200,
+                    msg: '删除成功'
+                })
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        res.send({
+            code: 400,
+            msg: '删除失败'
         })
     }
 }
@@ -286,4 +316,5 @@ module.exports = {
     adduser,
     getall_list,
     edituser,
+    removeuser,
 }
