@@ -156,7 +156,7 @@ let adduser = async (req, res) => {
                 var sqluser = `INSERT INTO personal(id,name,sex, integral,department,jointime) VALUES (?,?,?,?,?,?)`
                 var sqlArruser = [userid, name, sex, '0', department, jointime]
                 let res_user = await dbConfig.SySqlConnect(sqluser, sqlArruser);
-                if(res_user.affectedRows == 1) {
+                if (res_user.affectedRows == 1) {
                     res.send({
                         code: 200,
                         msg: '添加成功',
@@ -183,6 +183,44 @@ let adduser = async (req, res) => {
         res.send({
             code: 400,
             msg: '账号已存在'
+        })
+    }
+}
+
+//修改用户信息
+let edituser = async (req, res) => {
+    let id = req.body.id
+    let password = req.body.password
+    let grade = req.body.grade
+    let name = req.body.name
+    let sex = req.body.sex
+    let department = req.body.department
+    let jointime = req.body.jointime
+    if (grade != 3) department = '管理员'
+    var sql = `UPDATE account set password=?, grade=? where id=?`
+    var sqlArr = [password, grade, id]
+    try {
+        let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
+        if (res_add.affectedRows == 1) {
+            var sqluser = `UPDATE personal SET name=?,sex=?,department=?,jointime=? WHERE id=?`
+            var sqlArruser = [name, sex, department, jointime, id]
+            let res_user = await dbConfig.SySqlConnect(sqluser, sqlArruser);
+            if (res_user.affectedRows == 1) {
+                res.send({
+                    code: 200,
+                    msg: '修改成功',
+                })
+            }
+        } else {
+            res.send({
+                code: 400,
+                msg: '出现错误'
+            })
+        }
+    } catch (error) {
+        res.send({
+            code: 400,
+            msg: '修改失败'
         })
     }
 }
@@ -247,4 +285,5 @@ module.exports = {
     getactiv_all,
     adduser,
     getall_list,
+    edituser,
 }

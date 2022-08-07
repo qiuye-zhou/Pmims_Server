@@ -7,7 +7,9 @@ module.exports = {
         port: '3306',
         user: 'root',
         password: '',
-        database: 'project'
+        database: 'project',
+        //解决node和mysql时区不同造成的查询日期小一天的问题
+        timezone: "08:00",
     },
     //连接数据库，使用连接池方式
     //连接池对象
