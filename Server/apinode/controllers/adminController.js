@@ -2,7 +2,7 @@ var dbConfig = require('../util/dbconfig')
 
 //admin获取用户信息列表
 let getuser_list = (req, res) => {
-    var sql = `select name,sex,integral,department,jointime from personal where department!='管理员'`
+    var sql = `select id,name,sex,integral,department,jointime from personal where department!='管理员'`
     var sqlArr = []
     var callBack = (err, data) => {
         if (err) {
@@ -231,15 +231,17 @@ let removeuser = async (req, res) => {
     let sqlawards = `DELETE FROM awards WHERE id=?`
     let sqldetails = `DELETE FROM details WHERE id=?`
     let sqlpersonal = `DELETE FROM personal WHERE id=?`
+    let sqlexamine = `DELETE FROM examine WHERE id=?`
     let sqlaccount = `DELETE FROM account WHERE id=?`
     let sqlArr = [id]
     try {
         const resutl1 = await dbConfig.SySqlConnect(sqlawards, sqlArr);
         const resutl2 = await dbConfig.SySqlConnect(sqldetails, sqlArr);
         const resutl3 = await dbConfig.SySqlConnect(sqlpersonal, sqlArr);
-        if (resutl1 && resutl2 && resutl3) {
-            const resutl4 = await dbConfig.SySqlConnect(sqlaccount, sqlArr);
-            if (resutl4) {
+        const resutl4 = await dbConfig.SySqlConnect(sqlexamine, sqlArr);
+        if (resutl1 && resutl2 && resutl3 && resutl4) {
+            const resutl5 = await dbConfig.SySqlConnect(sqlaccount, sqlArr);
+            if (resutl5) {
                 res.send({
                     code: 200,
                     msg: '删除成功'
