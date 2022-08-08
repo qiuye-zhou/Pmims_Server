@@ -91,6 +91,24 @@ let getjoin_activ_user = (req, res) => {
     dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
+//admin获取用户审核信息列表
+let getexlist = (req, res) => {
+    let id = req.body.id
+    var sql = `select * from examine where id=?`
+    var sqlArr = [id]
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            res.send({
+                code: 200,
+                data: data
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
 //操作
 //发布活动
 let add_activ = async (req, res) => {
@@ -319,4 +337,5 @@ module.exports = {
     getall_list,
     edituser,
     removeuser,
+    getexlist,
 }

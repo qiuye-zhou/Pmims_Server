@@ -15,6 +15,7 @@ router.post('/getactiv_evalue',User.getactiv_evalue)
 
 router.post('/join_active',User.join_active)
 router.post('/activ_evaluate',User.activ_evaluate)
+router.post('/subprize',User.subprize)
 
 //echarts数据
 router.post('/getechartspie',User.getechartspie)

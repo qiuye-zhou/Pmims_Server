@@ -174,7 +174,7 @@ let activ_evaluate = async (req, res) => {
             if (evaluate_x_res[0].deta_evaluation === '') {
                 let evaluate_x = req.body.evaluate_x
                 let sql = `UPDATE details SET deta_evaluation=? WHERE id=? and activ_id=?`;
-                let sqlArr = [evaluate_x,id, activ_id];
+                let sqlArr = [evaluate_x, id, activ_id];
                 let res_join = await dbConfig.SySqlConnect(sql, sqlArr);
                 if (res_join.affectedRows == 1) {
                     res.send({
@@ -207,6 +207,31 @@ let activ_evaluate = async (req, res) => {
             msg: '没有参加该活动'
         })
     }
+}
+
+//获取activ_id 的全部详细信息
+let subprize = (req, res) => {
+    let id = req.body.id
+    let ex_name = req.body.ex_name
+    let ex_li = req.body.ex_li
+    let ex_time = req.body.ex_time
+    var sql = `INSERT INTO examine(id, ex_name, ex_li, ex_time, ex_result) VALUES (?,?,?,?,?)`
+    var sqlArr = [id, ex_name, ex_li, ex_time, '待审核']
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+            res.send({
+                code: 400,
+                msg: '提交失败'
+            })
+        } else {
+            res.send({
+                code: 200,
+                msg: '提交成功'
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
 //非请求————方法
@@ -301,4 +326,5 @@ module.exports = {
     join_active,
     activ_evaluate,
     getactiv_evalue,
+    subprize,
 }
