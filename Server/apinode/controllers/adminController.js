@@ -109,6 +109,23 @@ let getexlist = (req, res) => {
     dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
+//获取所有审核信息列表
+let getallex = (req, res) => {
+    var sql = `select p.name,p.id,e.ex_name,e.ex_li,e.ex_time,e.ex_result from examine as e join personal as p on e.id=p.id`
+    var sqlArr = []
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            res.send({
+                code: 200,
+                data: data
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
 //操作
 //发布活动
 let add_activ = async (req, res) => {
@@ -275,6 +292,46 @@ let removeuser = async (req, res) => {
     }
 }
 
+//审核
+let exsub = (req, res) => {
+    let id = req.body.id
+    let ex_name = req.body.ex_name
+    let ex_result = req.body.ex_result
+    let sqln = `UPDATE examine SET ex_result=? WHERE id=? and ex_name=?`
+    let sqlArrn = [ex_result, id, ex_name]
+    let callBackn = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            res.send({
+                code: 200,
+                msg: '审核成功'
+            })
+        }
+    }
+    try {
+        dbConfig.sqlConnect(sqln, sqlArrn, callBackn);
+        if (ex_result == '通过') {
+            let aw_time = req.body.ex_time
+            let aw_prize = req.body.ex_li
+            let branch = req.body.branch
+            let aw_name = req.body.ex_name
+            let sqly = `UPDATE personal SET integral=integral+? WHERE id=?`
+            let sqlArry = [branch, id]
+            let sqla = `INSERT INTO awards(id, aw_name, aw_prize, aw_time) VALUES (?,?,?,?)`
+            let sqlArra = [id, aw_name, aw_prize, aw_time]
+            dbConfig.sqlConnect(sqly, sqlArry);
+            dbConfig.sqlConnect(sqla, sqlArra);
+        }
+    } catch (error) {
+        console.log(error);
+        res.send({
+            code: 400,
+            msg: '出现错误'
+        })
+    }
+}
+
 //echarts数据
 //用户参加活动率(用户参加活动总数量 / 活动总数量*用户数量)——pie
 let getechartspie_useractiv = async (req, res) => {
@@ -338,4 +395,6 @@ module.exports = {
     edituser,
     removeuser,
     getexlist,
+    getallex,
+    exsub,
 }
