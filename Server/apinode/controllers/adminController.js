@@ -185,6 +185,48 @@ let add_activ = async (req, res) => {
     }
 }
 
+//编辑活动
+let edit_activ = async (req, res) => {
+    let activ_id = req.body.activ_id
+    let activ_name = req.body.activ_name
+    let activ_time = req.body.activ_time
+    let activ_integral = req.body.activ_integral
+    let activ_describe = req.body.activ_describe
+    let form = req.body.form
+    let newtime = new Date()
+    let ac_time = new Date()
+    let act_time_arr = activ_time.split('-')
+    ac_time.setFullYear(act_time_arr[0], act_time_arr[1] - 1, act_time_arr[2])
+    if (ac_time > newtime) {
+        var sql = `UPDATE activity SET activ_name=?,activ_time=?,activ_integral=?,activ_describe=?,form=? WHERE activ_id=?`
+        var sqlArr = [activ_name, activ_time, activ_integral, activ_describe, form,activ_id]
+        try {
+            let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
+            if (res_add.affectedRows == 1) {
+                res.send({
+                    code: 200,
+                    msg: '活动编辑成功'
+                })
+            } else {
+                res.send({
+                    code: 400,
+                    msg: '出现错误'
+                })
+            }
+        } catch (error) {
+            res.send({
+                code: 400,
+                msg: '活动编辑失败'
+            })
+        }
+    } else {
+        res.send({
+            code: 400,
+            msg: '时间设置错误'
+        })
+    }
+}
+
 //添加账户
 let adduser = async (req, res) => {
     let number = req.body.number
@@ -415,4 +457,5 @@ module.exports = {
     getallex,
     exsub,
     getactiv_alldep,
+    edit_activ,
 }

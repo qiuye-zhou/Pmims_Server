@@ -16,6 +16,7 @@ router.post('/adduser',Admin.adduser)
 router.post('/edituser',Admin.edituser)
 router.post('/removeuser',Admin.removeuser)
 router.post('/exsub',Admin.exsub)
+router.post('/edit_activ',Admin.edit_activ)
 
 //echarts数据
 router.post('/getechartspie_useractiv',Admin.getechartspie_useractiv)
