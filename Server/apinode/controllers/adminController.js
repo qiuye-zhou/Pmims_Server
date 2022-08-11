@@ -464,6 +464,7 @@ let getechartspie_useractiv = async (req, res) => {
     let pienum = (users_join_num[0].users_join_num / (user_num[0].user_num * activ_num[0].activ_num)) * 100
     let result = {
         user_activ_num: user_num[0].user_num * activ_num[0].activ_num,
+        activjoin_num: activ_num[0].activ_num,
         users_join_num: users_join_num[0].users_join_num,
         pienum: parseFloat(pienum.toString().substring(0, 5))
     }
