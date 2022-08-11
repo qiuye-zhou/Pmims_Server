@@ -185,6 +185,52 @@ let add_activ = async (req, res) => {
     }
 }
 
+//结束活动活动
+let result_activ = async (req, res) => {
+    let activ_id = req.body.activ_id
+    let activ_time = req.body.activ_time
+    let activ_integral = req.body.activ_integral
+    let newtime = new Date()
+    let ac_time = new Date()
+    let act_time_arr = activ_time.split('-')
+    ac_time.setFullYear(act_time_arr[0], act_time_arr[1] - 1, act_time_arr[2])
+    if (newtime > ac_time) {
+        try {
+            var sql = `UPDATE activity SET activ_result=1 WHERE activ_id=?`
+            var sqlArr = [activ_id]
+            let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
+            if (res_add.affectedRows == 1) {
+                var sqlp = `UPDATE personal SET integral=integral+? WHERE id=?`
+                const list = await getactiv_join(activ_id)
+                for (const item of list) {
+                    var sqlArrp = [activ_integral, item.id]
+                    dbConfig.sqlConnect(sqlp, sqlArrp)
+                }
+                res.send({
+                    code: 200,
+                    msg: '活动结束成功'
+                })
+            } else {
+                res.send({
+                    code: 400,
+                    msg: '出现错误'
+                })
+            }
+        } catch (error) {
+            console.log(error);
+            res.send({
+                code: 400,
+                msg: '活动结束失败'
+            })
+        }
+    } else {
+        res.send({
+            code: 400,
+            msg: '活动时间未过'
+        })
+    }
+}
+
 //编辑活动
 let edit_activ = async (req, res) => {
     let activ_id = req.body.activ_id
@@ -199,7 +245,7 @@ let edit_activ = async (req, res) => {
     ac_time.setFullYear(act_time_arr[0], act_time_arr[1] - 1, act_time_arr[2])
     if (ac_time > newtime) {
         var sql = `UPDATE activity SET activ_name=?,activ_time=?,activ_integral=?,activ_describe=?,form=? WHERE activ_id=?`
-        var sqlArr = [activ_name, activ_time, activ_integral, activ_describe, form,activ_id]
+        var sqlArr = [activ_name, activ_time, activ_integral, activ_describe, form, activ_id]
         try {
             let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
             if (res_add.affectedRows == 1) {
@@ -442,6 +488,13 @@ let getuserid = (number) => {
     return dbConfig.SySqlConnect(sql, sqlArr)
 }
 
+//查询该活动参加了的用户id列表
+let getactiv_join = (activ_id) => {
+    var sql = `SELECT id FROM details WHERE activ_id=?`
+    var sqlArr = [activ_id]
+    return dbConfig.SySqlConnect(sql, sqlArr)
+}
+
 module.exports = {
     getuser_list,
     getechartspie_useractiv,
@@ -458,4 +511,5 @@ module.exports = {
     exsub,
     getactiv_alldep,
     edit_activ,
+    result_activ,
 }
