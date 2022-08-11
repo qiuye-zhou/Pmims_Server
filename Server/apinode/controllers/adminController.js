@@ -143,6 +143,24 @@ let getallex = (req, res) => {
     dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
+//获取该活动评价信息列表
+let getevlist = (req, res) => {
+    let activ_id = req.body.activ_id
+    var sql = `select p.name,d.deta_evaluation from details as d join personal as p on d.id=p.id where activ_id=?`
+    var sqlArr = [activ_id]
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            res.send({
+                code: 200,
+                data: data
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
 //操作
 //发布活动
 let add_activ = async (req, res) => {
@@ -512,4 +530,5 @@ module.exports = {
     getactiv_alldep,
     edit_activ,
     result_activ,
+    getevlist,
 }

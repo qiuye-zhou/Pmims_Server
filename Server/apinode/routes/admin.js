@@ -10,6 +10,7 @@ router.post('/getall_list',Admin.getall_list)
 router.post('/getexlist',Admin.getexlist)
 router.post('/getallex',Admin.getallex)
 router.post('/getactiv_alldep',Admin.getactiv_alldep)
+router.post('/getevlist',Admin.getevlist)
 
 router.post('/add_activ',Admin.add_activ)
 router.post('/adduser',Admin.adduser)
