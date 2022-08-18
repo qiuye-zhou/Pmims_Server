@@ -5,7 +5,7 @@ var dbConfig = require('../util/dbconfig')
 //获取用户信息
 let getUser = (req, res) => {
     let id = req.body.id
-    var sql = 'select name,sex,integral,department,jointime from personal where id=?'
+    var sql = 'select name,sex,integral,department,jointime,age from personal where id=?'
     var sqlArr = [id]
     var callBack = (err, data) => {
         if (err) {

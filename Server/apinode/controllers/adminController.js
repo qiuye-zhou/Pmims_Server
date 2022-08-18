@@ -2,7 +2,7 @@ var dbConfig = require('../util/dbconfig')
 
 //admin获取用户信息列表
 let getuser_list = (req, res) => {
-    var sql = `select id,name,sex,integral,department,jointime from personal where department!='管理员'`
+    var sql = `select id,name,sex,integral,department,jointime,age from personal where department!='管理员'`
     var sqlArr = []
     var callBack = (err, data) => {
         if (err) {
@@ -19,7 +19,7 @@ let getuser_list = (req, res) => {
 
 //admin获取所有账号信息列表
 let getall_list = (req, res) => {
-    var sql = `select a.id,a.number,a.password,a.grade,p.name,p.sex,p.integral,p.department,p.jointime from account as a join personal as p on a.id=p.id`
+    var sql = `select a.id,a.number,a.password,a.grade,p.name,p.sex,p.integral,p.department,p.jointime,p.age from account as a join personal as p on a.id=p.id`
     var sqlArr = []
     var callBack = (err, data) => {
         if (err) {
@@ -300,6 +300,7 @@ let adduser = async (req, res) => {
     let sex = req.body.sex
     let department = req.body.department
     let jointime = req.body.jointime
+    let age = req.body.age
     if (grade != 3) department = '管理员'
     let result = await getuseraccount(number)
     result = result[0].result
@@ -311,8 +312,8 @@ let adduser = async (req, res) => {
             if (res_add.affectedRows == 1) {
                 let userid = await getuserid(number)
                 userid = userid[0].id
-                var sqluser = `INSERT INTO personal(id,name,sex, integral,department,jointime) VALUES (?,?,?,?,?,?)`
-                var sqlArruser = [userid, name, sex, '0', department, jointime]
+                var sqluser = `INSERT INTO personal(id,name,sex, integral,department,jointime,age) VALUES (?,?,?,?,?,?,?)`
+                var sqlArruser = [userid, name, sex, '0', department, jointime, age]
                 let res_user = await dbConfig.SySqlConnect(sqluser, sqlArruser);
                 if (res_user.affectedRows == 1) {
                     res.send({
@@ -354,14 +355,15 @@ let edituser = async (req, res) => {
     let sex = req.body.sex
     let department = req.body.department
     let jointime = req.body.jointime
+    let age = req.body.age
     if (grade != 3) department = '管理员'
     var sql = `UPDATE account set password=?, grade=? where id=?`
     var sqlArr = [password, grade, id]
     try {
         let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
         if (res_add.affectedRows == 1) {
-            var sqluser = `UPDATE personal SET name=?,sex=?,department=?,jointime=? WHERE id=?`
-            var sqlArruser = [name, sex, department, jointime, id]
+            var sqluser = `UPDATE personal SET name=?,sex=?,department=?,jointime=?,age=? WHERE id=?`
+            var sqlArruser = [name, sex, department, jointime, age, id]
             let res_user = await dbConfig.SySqlConnect(sqluser, sqlArruser);
             if (res_user.affectedRows == 1) {
                 res.send({
