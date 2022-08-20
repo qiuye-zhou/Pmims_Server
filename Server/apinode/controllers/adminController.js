@@ -476,6 +476,65 @@ let getechartspie_useractiv = async (req, res) => {
     })
 }
 
+//echart图年龄数据(不包括管理员)
+let getechartspie_userage = (req, res) => {
+    var sql = `select age from personal where department!='管理员'`
+    var sqlArr = []
+    var callBack = (err, data) => {
+        if (err) {
+            console.log('--连接出错了--');
+        } else {
+            const list = {
+                a18: 0,
+                b26: 0,
+                c38: 0,
+                d52: 0,
+                e72: 0,
+                fmax: 0,
+            }
+            const agelist = []
+            for (const item of data) {
+                agelist.push(item.age.split('-'))
+            }
+            const newtime = new Date()
+            var nowYear = newtime.getFullYear();
+            var nowMonth = newtime.getMonth() + 1; //记得加1
+            var nowDay = newtime.getDate();
+            for (const item of agelist) {
+                let age = nowYear - item[0]
+                if (item[1] > nowMonth || (item[1] == nowMonth && item[2] > nowDay)) {
+                    age--
+                }
+                switch (true) {
+                    case age <= 18:
+                        list.a18++
+                        break;
+                    case age <= 26:
+                        list.b26++
+                        break;
+                    case age <= 38:
+                        list.c38++
+                        break;
+                    case age <= 52:
+                        list.d52++
+                        break;
+                    case age <= 72:
+                        list.e72++
+                        break;
+                    default:
+                        list.fmax++
+                        break;
+                }
+            }
+            res.send({
+                code: 200,
+                data: list
+            })
+        }
+    }
+    dbConfig.sqlConnect(sql, sqlArr, callBack)
+}
+
 //非请求————方法
 //获取用户数量
 let getusers_num = () => {
@@ -534,4 +593,5 @@ module.exports = {
     edit_activ,
     result_activ,
     getevlist,
+    getechartspie_userage,
 }

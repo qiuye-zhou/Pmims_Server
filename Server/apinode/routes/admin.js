@@ -22,5 +22,6 @@ router.post('/result_activ',Admin.result_activ)
 
 //echarts数据
 router.post('/getechartspie_useractiv',Admin.getechartspie_useractiv)
+router.post('/getechartspie_userage',Admin.getechartspie_userage)
 
 module.exports = router
