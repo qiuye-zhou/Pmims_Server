@@ -460,20 +460,27 @@ let exsub = (req, res) => {
 //echarts数据
 //用户参加活动率(用户参加活动总数量 / 活动总数量*用户数量)——pie
 let getechartspie_useractiv = async (req, res) => {
-    let user_num = await getusers_num()
-    let activ_num = await getactiv_num()
-    let users_join_num = await getusers_join()
-    let pienum = (users_join_num[0].users_join_num / (user_num[0].user_num * activ_num[0].activ_num)) * 100
-    let result = {
-        user_activ_num: user_num[0].user_num * activ_num[0].activ_num,
-        activjoin_num: activ_num[0].activ_num,
-        users_join_num: users_join_num[0].users_join_num,
-        pienum: parseFloat(pienum.toString().substring(0, 5))
+    try {
+        let user_num = await getusers_num()
+        let activ_num = await getactiv_num()
+        let users_join_num = await getusers_join()
+        let pienum = (users_join_num[0].users_join_num / (user_num[0].user_num * activ_num[0].activ_num)) * 100
+        let result = {
+            user_activ_num: user_num[0].user_num * activ_num[0].activ_num,
+            activjoin_num: activ_num[0].activ_num,
+            users_join_num: users_join_num[0].users_join_num,
+            pienum: parseFloat(pienum.toString().substring(0, 5))
+        }
+        res.send({
+            code: 200,
+            data: result
+        })
+    } catch (error) {
+        res.send({
+            code: 400,
+            msg: '服务器错误'
+        })
     }
-    res.send({
-        code: 200,
-        data: result
-    })
 }
 
 //echart图年龄数据(不包括管理员)
@@ -535,6 +542,25 @@ let getechartspie_userage = (req, res) => {
     dbConfig.sqlConnect(sql, sqlArr, callBack)
 }
 
+//echart图男女比例数据(不包括管理员)
+let getsexpie = async (req, res) => {
+    try {
+        var sql = `select count(id) as man from personal where department!='管理员' and sex='男'`
+        const usernum = await getusers_num()
+        const man = await dbConfig.SySqlConnect(sql)
+        res.send({
+            code: 200,
+            man: man[0].man,
+            gril: usernum[0].user_num - man[0].man,
+        })
+    } catch (error) {
+        res.send({
+            code: 400,
+            msg: '服务器错误'
+        })
+    }
+}
+
 //非请求————方法
 //获取用户数量
 let getusers_num = () => {
@@ -594,4 +620,5 @@ module.exports = {
     result_activ,
     getevlist,
     getechartspie_userage,
+    getsexpie,
 }
