@@ -11,7 +11,6 @@ router.post('/getexlist',Admin.getexlist)
 router.post('/getallex',Admin.getallex)
 router.post('/getactiv_alldep',Admin.getactiv_alldep)
 router.post('/getevlist',Admin.getevlist)
-router.post('/getsexpie',Admin.getsexpie)
 
 router.post('/add_activ',Admin.add_activ)
 router.post('/adduser',Admin.adduser)
@@ -24,5 +23,7 @@ router.post('/result_activ',Admin.result_activ)
 //echarts数据
 router.post('/getechartspie_useractiv',Admin.getechartspie_useractiv)
 router.post('/getechartspie_userage',Admin.getechartspie_userage)
+router.post('/getsexpie',Admin.getsexpie)
+router.post('/getactivbar',Admin.getactivbar)
 
 module.exports = router

@@ -561,6 +561,80 @@ let getsexpie = async (req, res) => {
     }
 }
 
+//echart图活动分布数据
+let getactivbar = async (req, res) => {
+    const year = req.body.year
+    const activbarlist = {
+        y1: 0,
+        y2: 0,
+        y3: 0,
+        y4: 0,
+        y5: 0,
+        y6: 0,
+        y7: 0,
+        y8: 0,
+        y9: 0,
+        y10: 0,
+        y11: 0,
+        y12: 0,
+    }
+    try {
+        var sql = `SELECT activ_time FROM activity WHERE year(activ_time)=?`
+        var sqlArr = [year]
+        const result = await dbConfig.SySqlConnect(sql, sqlArr)
+        for (const item of result) {
+            let mon = parseInt(item.activ_time.split('-')[1])
+            switch (mon) {
+                case 1:
+                    activbarlist.y1++
+                    break;
+                case 2:
+                    activbarlist.y2++
+                    break;
+                case 3:
+                    activbarlist.y3++
+                    break;
+                case 4:
+                    activbarlist.y4++
+                    break;
+                case 5:
+                    activbarlist.y5++
+                    break;
+                case 6:
+                    activbarlist.y6++
+                    break;
+                case 7:
+                    activbarlist.y7++
+                    break;
+                case 8:
+                    activbarlist.y8++
+                    break;
+                case 9:
+                    activbarlist.y9++
+                    break;
+                case 10:
+                    activbarlist.y10++
+                    break;
+                case 11:
+                    activbarlist.y11++
+                    break;
+                case 12:
+                    activbarlist.y12++
+                    break;
+            }
+        }
+        res.send({
+            code: 200,
+            data: activbarlist,
+        })
+    } catch (error) {
+        res.send({
+            code: 400,
+            msg: '服务器错误'
+        })
+    }
+}
+
 //非请求————方法
 //获取用户数量
 let getusers_num = () => {
@@ -621,4 +695,5 @@ module.exports = {
     getevlist,
     getechartspie_userage,
     getsexpie,
+    getactivbar,
 }
