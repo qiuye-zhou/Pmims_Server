@@ -169,13 +169,14 @@ let add_activ = async (req, res) => {
     let activ_integral = req.body.activ_integral
     let activ_describe = req.body.activ_describe
     let form = req.body.form
+    let file = req.body.file
     let newtime = new Date()
     let ac_time = new Date()
     let act_time_arr = activ_time.split('-')
     ac_time.setFullYear(act_time_arr[0], act_time_arr[1] - 1, act_time_arr[2])
     if (ac_time > newtime) {
-        var sql = `INSERT INTO activity(activ_name, activ_time, activ_integral, activ_describe, form) VALUES (?,?,?,?,?)`
-        var sqlArr = [activ_name, activ_time, activ_integral, activ_describe, form]
+        var sql = `INSERT INTO activity(activ_name, activ_time, activ_integral, activ_describe, form,file) VALUES (?,?,?,?,?,?)`
+        var sqlArr = [activ_name, activ_time, activ_integral, activ_describe, form,file]
         try {
             let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
             if (res_add.affectedRows == 1) {
