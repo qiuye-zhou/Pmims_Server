@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
+var fileRouter = require('./routes/file')
 
 var app = express();
 
@@ -14,17 +15,17 @@ var http = require('http');
 var server = http.createServer(app);
 
 //解决跨域问题，在加载路由之前使用
-app.all('*', function(req, res, next) {
+app.all('*', function (req, res, next) {
   // console.log(req.headers.origin)
   // console.log(req.environ)
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   // res.header("Access-Control-Allow-Origin", '*');
   res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With,token,id,grade");
-  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Credentials","true");
-  res.header("X-Powered-By",' 3.2.1')
-  if(req.method === "OPTIONS") res.send(200);/*让options请求快速返回*/
-  else  next();
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("X-Powered-By", ' 3.2.1')
+  if (req.method === "OPTIONS") res.send(200);/*让options请求快速返回*/
+  else next();
 });
 
 // view engine setup
@@ -45,7 +46,7 @@ app.use((req, res, next) => {
   if (req._parsedUrl.pathname != '/login') {
     if (verifydata.result) {
       //验证权限
-      if(verifydata.data.data.id == req.headers.id && verifydata.data.data.grade == req.headers.grade) {
+      if (verifydata.data.data.id == req.headers.id && verifydata.data.data.grade == req.headers.grade) {
         next()
       } else {
         res.send({
@@ -67,6 +68,7 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter)
+app.use('/file', fileRouter)
 
 
 // catch 404 and forward to error handler
