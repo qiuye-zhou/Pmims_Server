@@ -43,25 +43,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 var token = require('./util/token')
 app.use((req, res, next) => {
   const verifydata = token.verifyToken(req.headers.token)
-  if (req._parsedUrl.pathname != '/login') {
-    if (verifydata.result) {
-      //验证权限
-      if (verifydata.data.data.id == req.headers.id && verifydata.data.data.grade == req.headers.grade) {
-        next()
+  if (req._parsedUrl.pathname == '/file/download') {
+    next()
+  } else {
+    if (req._parsedUrl.pathname != '/login') {
+      if (verifydata.result) {
+        //验证权限
+        if (verifydata.data.data.id == req.headers.id && verifydata.data.data.grade == req.headers.grade) {
+          next()
+        } else {
+          res.send({
+            code: 401,
+            msg: '权限认证失败'
+          })
+        }
       } else {
         res.send({
-          code: 401,
-          msg: '权限认证失败'
+          code: 400,
+          msg: 'token已失效'
         })
       }
     } else {
-      res.send({
-        code: 400,
-        msg: 'token已失效'
-      })
+      next()
     }
-  } else {
-    next()
   }
 })
 

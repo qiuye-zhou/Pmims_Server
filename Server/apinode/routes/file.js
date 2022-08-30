@@ -26,7 +26,6 @@ router.post('/uploadac', multer({
 
 router.get('/download', (req, res) => {
     const name = req.query.name
-    console.log(name);
     const file = `public/uploadac/${name}.docx`
     fs.access(file, fs.constants.F_OK, (err) => {
     //   console.log(`${file} ${err ? '不存在' : '存在'}`);
