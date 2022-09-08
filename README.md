@@ -5,3 +5,5 @@ Pmims服务端(Node(nodemon)，Express，Mysql)
 ```
 npm start
 ```
+
+前端项目地址：https://github.com/zhou130258/Pmims
