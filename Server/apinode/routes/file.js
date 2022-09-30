@@ -40,20 +40,20 @@ router.get('/download', (req, res) => {
     fs.access(file, fs.constants.F_OK, (err) => {
     //   console.log(`${file} ${err ? '不存在' : '存在'}`);
       if(err) {
-        fs.copyFile(`./public/uploadac/${name}.xlsx`, `./public/download/${filename}.xlsx`,(err) => {
+        fs.copyFile(`./public/uploadac/${name}.xlsx`, `./public/downloadac/${filename}.xlsx`,(err) => {
           if(err) {
             console.log(err);
           } else {
-            const filePath = path.join(__dirname, '../public/download/' + filename + '.xlsx')
+            const filePath = path.join(__dirname, '../public/downloadac/' + filename + '.xlsx')
             res.download(filePath)
           }
         })
       } else {
-        fs.copyFile(`./public/uploadac/${name}.docx`, `./public/download/${filename}.docx`,(err) => {
+        fs.copyFile(`./public/uploadac/${name}.docx`, `./public/downloadac/${filename}.docx`,(err) => {
           if(err) {
             console.log(err);
           } else {
-            const filePath = path.join(__dirname, '../public/download/' + filename + '.docx')
+            const filePath = path.join(__dirname, '../public/downloadac/' + filename + '.docx')
             res.download(filePath)
           }
         })
