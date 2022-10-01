@@ -209,7 +209,7 @@ let activ_evaluate = async (req, res) => {
     }
 }
 
-//获取activ_id 的全部详细信息
+//提交获奖审核
 let subprize = (req, res) => {
     let id = req.body.id
     let ex_name = req.body.ex_name
@@ -217,7 +217,7 @@ let subprize = (req, res) => {
     let ex_time = req.body.ex_time
     var sql = `INSERT INTO examine(id, ex_name, ex_li, ex_time, ex_result) VALUES (?,?,?,?,?)`
     var sqlArr = [id, ex_name, ex_li, ex_time, '待审核']
-    var callBack = (err, data) => {
+    var callBack = async (err, data) => {
         if (err) {
             console.log('--连接出错了--');
             res.send({
@@ -225,8 +225,10 @@ let subprize = (req, res) => {
                 msg: '提交失败'
             })
         } else {
+            const ex_id = await getexid(sqlArr)
             res.send({
                 code: 200,
+                ex_id: ex_id,
                 msg: '提交成功'
             })
         }
@@ -235,6 +237,12 @@ let subprize = (req, res) => {
 }
 
 //非请求————方法
+//获取当前提交审核的ex_id
+let getexid = (sqlArr) => {
+    var sql = `select ex_id from examine where id=? and ex_name=? and ex_li=? and ex_time=? and ex_result=?`
+    return dbConfig.SySqlConnect(sql, sqlArr)
+}
+
 //获取个人用户参加了的活动的信息
 let getdetails = (id) => {
     var sql = 'select activ_id,deta_evaluation,deta_win from details where id=?'

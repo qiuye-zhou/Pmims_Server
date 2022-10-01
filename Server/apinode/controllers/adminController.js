@@ -150,7 +150,7 @@ let getexlist = (req, res) => {
 
 //获取所有审核信息列表
 let getallex = (req, res) => {
-    var sql = `select p.name,p.id,e.ex_name,e.ex_li,e.ex_time,e.ex_result from examine as e join personal as p on e.id=p.id`
+    var sql = `select p.name,p.id,e.ex_name,e.ex_li,e.ex_time,e.ex_result,e.ex_id from examine as e join personal as p on e.id=p.id`
     var sqlArr = []
     var callBack = (err, data) => {
         if (err) {
@@ -226,7 +226,7 @@ let add_activ = async (req, res) => {
     }
 }
 
-//结束活动活动
+//结束活动
 let result_activ = async (req, res) => {
     let activ_id = req.body.activ_id
     let activ_time = req.body.activ_time
@@ -445,8 +445,9 @@ let exsub = (req, res) => {
     let id = req.body.id
     let ex_name = req.body.ex_name
     let ex_result = req.body.ex_result
-    let sqln = `UPDATE examine SET ex_result=? WHERE id=? and ex_name=?`
-    let sqlArrn = [ex_result, id, ex_name]
+    let ex_id = req.body.ex_id
+    let sqln = `UPDATE examine SET ex_result=? WHERE id=? and ex_name=? and ex_id=?`
+    let sqlArrn = [ex_result, id, ex_name,ex_id]
     let callBackn = (err, data) => {
         if (err) {
             console.log('--连接出错了--');

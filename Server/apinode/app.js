@@ -43,7 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var token = require('./util/token')
 app.use((req, res, next) => {
   const verifydata = token.verifyToken(req.headers.token)
-  if (req._parsedUrl.pathname == '/file/download') {
+  if (req._parsedUrl.pathname == '/file/download' || req._parsedUrl.pathname == '/file/downloadex') {
     next()
   } else {
     if (req._parsedUrl.pathname != '/login') {
