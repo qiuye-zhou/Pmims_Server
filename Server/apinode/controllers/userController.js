@@ -237,7 +237,7 @@ let subprize = (req, res) => {
 }
 
 //非请求————方法
-//获取当前提交审核的ex_id
+//获取当前提交审核的ex_id用于用户提交审核提交文件带上的应设的文件名
 let getexid = (sqlArr) => {
     var sql = `select ex_id from examine where id=? and ex_name=? and ex_li=? and ex_time=? and ex_result=?`
     return dbConfig.SySqlConnect(sql, sqlArr)

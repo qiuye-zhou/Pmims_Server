@@ -417,6 +417,7 @@ let removeuser = async (req, res) => {
     let sqlexamine = `DELETE FROM examine WHERE id=?`
     let sqlaccount = `DELETE FROM account WHERE id=?`
     let sqlArr = [id]
+    //可优化，减少sql执行条数
     try {
         const resutl1 = await dbConfig.SySqlConnect(sqlawards, sqlArr);
         const resutl2 = await dbConfig.SySqlConnect(sqldetails, sqlArr);

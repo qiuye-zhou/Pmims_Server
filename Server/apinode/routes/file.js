@@ -36,24 +36,36 @@ router.post('/uploadac', multer({
 router.get('/download', (req, res) => {
     const name = req.query.name
     const filename = req.query.filename
+    //拿到活动名称活动ID用于判断保存文件夹名称、位置
+    const activ_name = req.query.activname
+    const activ_id = req.query.acid
+    fs.exists(`./public/downloadac/ID${activ_id}${activ_name}`, function(exists) {
+      if(!exists) {
+        fs.mkdir(`./public/downloadac/ID${activ_id}${activ_name}`,function(err){
+          if(err) console.error(err);
+          console.log(`创建目录ID${activ_id}${activ_name}成功`);
+        });
+      }
+    });
+    //——————
     const file = `public/uploadac/${name}.docx`
     fs.access(file, fs.constants.F_OK, (err) => {
     //   console.log(`${file} ${err ? '不存在' : '存在'}`);
       if(err) {
-        fs.copyFile(`./public/uploadac/${name}.xlsx`, `./public/downloadac/${filename}.xlsx`,(err) => {
+        fs.copyFile(`./public/uploadac/${name}.xlsx`, `./public/downloadac/ID${activ_id}${activ_name}/${filename}.xlsx`,(err) => {
           if(err) {
             console.log(err);
           } else {
-            const filePath = path.join(__dirname, '../public/downloadac/' + filename + '.xlsx')
+            const filePath = path.join(__dirname, `../public/downloadac/ID${activ_id}${activ_name}/` + filename + '.xlsx')
             res.download(filePath)
           }
         })
       } else {
-        fs.copyFile(`./public/uploadac/${name}.docx`, `./public/downloadac/${filename}.docx`,(err) => {
+        fs.copyFile(`./public/uploadac/${name}.docx`, `./public/downloadac/ID${activ_id}${activ_name}/${filename}.docx`,(err) => {
           if(err) {
             console.log(err);
           } else {
-            const filePath = path.join(__dirname, '../public/downloadac/' + filename + '.docx')
+            const filePath = path.join(__dirname, `../public/downloadac/ID${activ_id}${activ_name}/` + filename + '.docx')
             res.download(filePath)
           }
         })
@@ -92,6 +104,7 @@ router.post('/uploadex', multer({
 })
 
 router.get('/downloadex', (req, res) => {
+  const username = req.query.username
   const name = req.query.name
   const file = `public/uploadex/${name}.jpg`
   fs.access(file, fs.constants.F_OK, (err) => {
@@ -100,16 +113,34 @@ router.get('/downloadex', (req, res) => {
       const filet = `public/uploadex/${name}.png`
       fs.access(filet, fs.constants.F_OK, (err) => {
       if(err) {
-        const filePath = path.join(__dirname, '../public/uploadex/' + name + '.pdf')
-        res.download(filePath)
+        fs.copyFile(`./public/uploadex/${name}.pdf`,`./public/downloadex/${username}.pdf`,(err) => {
+          if(err) {
+            console.log(err);
+          } else {
+            const filePath = path.join(__dirname, '../public/downloadex/' + username + '.pdf')
+            res.download(filePath)
+          }
+        })
       } else {
-        const filePath = path.join(__dirname, '../public/uploadex/' + name + '.png')
-        res.download(filePath)
+        fs.copyFile(`./public/uploadex/${name}.png`,`./public/downloadex/${username}.png`,(err) => {
+          if(err) {
+            console.log(err);
+          } else {
+            const filePath = path.join(__dirname, '../public/downloadex/' + username + '.png')
+            res.download(filePath)
+          }
+        })
       }
       })
     } else {
-      const filePath = path.join(__dirname, '../public/uploadex/' + name + '.jpg')
-      res.download(filePath)
+      fs.copyFile(`./public/uploadex/${name}.jpg`,`./public/downloadex/${username}.jpg`,(err) => {
+        if(err) {
+          console.log(err);
+        } else {
+          const filePath = path.join(__dirname, '../public/downloadex/' + username + '.jpg')
+          res.download(filePath)
+        }
+      })
     }
   });
 })
