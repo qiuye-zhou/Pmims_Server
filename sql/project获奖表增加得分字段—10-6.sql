@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2022-08-29 09:33:41
+-- Generation Time: 2022-10-06 10:12:12
 -- 服务器版本： 10.1.32-MariaDB
 -- PHP Version: 5.6.36
 
@@ -46,7 +46,8 @@ INSERT INTO `account` (`id`, `number`, `password`, `grade`) VALUES
 (11, 'user004', 'user004', 3),
 (12, 'admin222', 'admin222', 2),
 (13, 'supadmin', 'supadmin', 1),
-(14, 'user555', 'user555', 3);
+(14, 'user555', 'user555', 3),
+(15, 'user006', 'user006', 3);
 
 -- --------------------------------------------------------
 
@@ -75,11 +76,12 @@ INSERT INTO `activity` (`activ_id`, `activ_name`, `activ_time`, `activ_integral`
 (5, '第三次运动会', '2022-08-18', 1, 0, '第三次运动会活动简介', '活动详细信息', 0),
 (6, '第四场运动会', '2022-07-09', 2, 1, '第四场运动会第四场运动会第四场运动会', '第四场运动会第四场运动会第四场运动会第四场运动会第四场运动会', 0),
 (7, '第五场运动会', '2022-07-20', 2, 1, '第五场运动会第五场运动会第五场运动会第五场运动会第五场运动会第五场运动会', '第五场运动会第五场运动会第五场运动会第五场运动会第五场运动会第五场运动会第五场运动会', 0),
-(8, '发布测试', '2022-08-17', 1, 0, '<h2>测试测试<h2/>', '<h2>测试测试<h2/><h2>测试测试<h2/><h2>测试测试<h2/>', 0),
+(8, '发布测试', '2022-08-17', 1, 1, '<h2>测试测试<h2/>', '<h2>测试测试<h2/><h2>测试测试<h2/><h2>测试测试<h2/>', 0),
 (9, '发布测试2', '2022-08-23', 2, 0, '<h2>h22<h2/>\n<p>cscscscscscsc<p/>\n<h2>h22<h2/>\n<p>cscscscscscscs<p/>', '<h2>h22<h2/>\n<p>cscscscscscsc<p/>\n<h2>h22<h2/>\n<p>cscscscscscscs<p/>', 0),
 (10, '测试提交文件区别', '2022-08-30', 3, 0, '<h5>测试提交文件区别<h5/><h5>测试提交文件区别<h5/>', '<h5>测试提交文件区别<h5/><h5>测试提交文件区别<h5/>', 0),
 (12, '测试提交文件区别1', '2022-08-30', 1, 0, '<h5>测试提交文件区别<h5/>', '<h5>测试提交文件区别<h5/><h5>测试提交文件区别<h5/>', 0),
-(13, '测试提交文件区别2', '2022-09-29', 2, 0, '<h5>测试提交文件区别<h5/><h5>测试提交文件区别<h5/>', '<h5>测试提交文件区别<h5/><h5>测试提交文件区别<h5/>', 1);
+(13, '测试提交文件区别2', '2022-09-29', 2, 0, '<h5>测试提交文件区别<h5/><h5>测试提交文件区别<h5/>', '<h5>测试提交文件区别<h5/><h5>测试提交文件区别<h5/>', 1),
+(14, '文件上传测试222', '2022-09-29', 1, 0, '文件上传测试222', '文件上传测试222', 1);
 
 -- --------------------------------------------------------
 
@@ -91,16 +93,21 @@ CREATE TABLE `awards` (
   `id` int(12) NOT NULL,
   `aw_name` varchar(20) COLLATE utf8_bin NOT NULL,
   `aw_prize` varchar(20) COLLATE utf8_bin NOT NULL,
-  `aw_time` date NOT NULL
+  `aw_time` date NOT NULL,
+  `aw_addinte` int(200) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- 转存表中的数据 `awards`
 --
 
-INSERT INTO `awards` (`id`, `aw_name`, `aw_prize`, `aw_time`) VALUES
-(2, '第一次运动会', '一等奖', '2022-07-06'),
-(2, '测试', '一等奖', '2022-08-02');
+INSERT INTO `awards` (`id`, `aw_name`, `aw_prize`, `aw_time`, `aw_addinte`) VALUES
+(2, '第一次运动会', '一等奖', '2022-07-06', 1),
+(2, '测试', '一等奖', '2022-08-02', 1),
+(2, '测试提交审核', '第一次', '2022-08-02', 1),
+(3, '测试22', '一', '2022-10-03', 1),
+(2, 'user002', 'user', '2022-10-09', 1),
+(11, 'asdsa', 'aaa', '2022-10-04', 2);
 
 -- --------------------------------------------------------
 
@@ -127,7 +134,15 @@ INSERT INTO `details` (`id`, `activ_id`, `deta_evaluation`, `deta_win`) VALUES
 (2, 7, '', 0),
 (2, 6, '', 0),
 (3, 6, '', 0),
-(11, 8, '', 0);
+(11, 8, '', 0),
+(2, 9, '', 0),
+(3, 5, '', 0),
+(3, 13, '', 0),
+(14, 13, '', 0),
+(15, 13, '', 0),
+(15, 14, '', 0),
+(2, 14, '', 0),
+(3, 14, '', 0);
 
 -- --------------------------------------------------------
 
@@ -137,6 +152,7 @@ INSERT INTO `details` (`id`, `activ_id`, `deta_evaluation`, `deta_win`) VALUES
 
 CREATE TABLE `examine` (
   `id` int(12) NOT NULL,
+  `ex_id` int(12) NOT NULL,
   `ex_name` varchar(36) COLLATE utf8_bin NOT NULL,
   `ex_li` varchar(36) COLLATE utf8_bin NOT NULL,
   `ex_time` date NOT NULL,
@@ -147,9 +163,13 @@ CREATE TABLE `examine` (
 -- 转存表中的数据 `examine`
 --
 
-INSERT INTO `examine` (`id`, `ex_name`, `ex_li`, `ex_time`, `ex_result`) VALUES
-(2, '测试', '一等奖', '2022-08-02', '通过'),
-(2, '测试提交审核', '第一次', '2022-08-02', '待审核');
+INSERT INTO `examine` (`id`, `ex_id`, `ex_name`, `ex_li`, `ex_time`, `ex_result`) VALUES
+(2, 1, '测试', '一等奖', '2022-08-02', '通过'),
+(2, 2, '测试提交审核', '第一次', '2022-08-02', '通过'),
+(3, 3, '测试22', '一', '2022-10-03', '通过'),
+(2, 4, 'user002', 'user', '2022-10-09', '通过'),
+(11, 9, 'asdsa', 'aaa', '2022-10-04', '通过'),
+(11, 10, 'qw', 'ewq', '2022-10-10', '待审核');
 
 -- --------------------------------------------------------
 
@@ -173,12 +193,13 @@ CREATE TABLE `personal` (
 
 INSERT INTO `personal` (`id`, `name`, `sex`, `integral`, `department`, `jointime`, `age`) VALUES
 (1, '张三', '男', 0, '管理员', '2022-07-01', '2001-02-02'),
-(2, '小王', '男', 5, '语文部', '2022-07-02', '2001-05-02'),
-(3, '小米', '女', 4, '实习部', '2022-07-03', '2000-02-02'),
-(11, '小米2', '女', 0, '测试部', '2022-08-05', '1996-02-02'),
+(2, '小王', '男', 8, '语文部', '2022-07-02', '2001-05-02'),
+(3, '小米', '女', 5, '实习部', '2022-07-03', '2000-02-02'),
+(11, '小米2', '女', 3, '测试部', '2022-08-05', '1996-02-02'),
 (12, '管理员2', '男', 0, '管理员', '2022-08-09', '1990-02-02'),
 (13, '高级管理员', '男', 0, '管理员', '2022-08-22', '1986-02-02'),
-(14, '小五', '男', 0, '测试部', '2022-08-16', '1989-02-02');
+(14, '小五', '男', 0, '测试部', '2022-08-16', '1989-02-02'),
+(15, '用户cs', '男', 0, '文件部', '2022-08-16', '1981-07-23');
 
 --
 -- Indexes for dumped tables
@@ -216,6 +237,7 @@ ALTER TABLE `details`
 -- Indexes for table `examine`
 --
 ALTER TABLE `examine`
+  ADD PRIMARY KEY (`ex_id`),
   ADD KEY `id` (`id`);
 
 --
@@ -232,13 +254,19 @@ ALTER TABLE `personal`
 -- 使用表AUTO_INCREMENT `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- 使用表AUTO_INCREMENT `activity`
 --
 ALTER TABLE `activity`
-  MODIFY `activ_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `activ_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- 使用表AUTO_INCREMENT `examine`
+--
+ALTER TABLE `examine`
+  MODIFY `ex_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- 限制导出的表
