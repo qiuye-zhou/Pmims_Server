@@ -59,7 +59,7 @@ app.use((req, res, next) => {
         }
       } else {
         res.send({
-          code: 400,
+          code: 401,
           msg: 'token已失效'
         })
       }

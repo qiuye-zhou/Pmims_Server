@@ -468,8 +468,8 @@ let exsub = (req, res) => {
             let aw_name = req.body.ex_name
             let sqly = `UPDATE personal SET integral=integral+? WHERE id=?`
             let sqlArry = [branch, id]
-            let sqla = `INSERT INTO awards(id, aw_name, aw_prize, aw_time) VALUES (?,?,?,?)`
-            let sqlArra = [id, aw_name, aw_prize, aw_time]
+            let sqla = `INSERT INTO awards(id, aw_name, aw_prize, aw_time, aw_addinte) VALUES (?,?,?,?,?)`
+            let sqlArra = [id, aw_name, aw_prize, aw_time, branch]
             dbConfig.sqlConnect(sqly, sqlArry);
             dbConfig.sqlConnect(sqla, sqlArra);
         }
