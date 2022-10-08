@@ -230,7 +230,7 @@ let add_activ = async (req, res) => {
 let result_activ = async (req, res) => {
     let activ_id = req.body.activ_id
     let activ_time = req.body.activ_time
-    let activ_integral = req.body.activ_integral
+    let result_list = req.body.list
     let newtime = new Date()
     let ac_time = new Date()
     let act_time_arr = activ_time.split('-')
@@ -241,10 +241,9 @@ let result_activ = async (req, res) => {
             var sqlArr = [activ_id]
             let res_add = await dbConfig.SySqlConnect(sql, sqlArr);
             if (res_add.affectedRows == 1) {
-                var sqlp = `UPDATE personal SET integral=integral+? WHERE id=?`
-                const list = await getactiv_join(activ_id)
-                for (const item of list) {
-                    var sqlArrp = [activ_integral, item.id]
+                var sqlp = `UPDATE details SET add_inte=? WHERE id=? and activ_id=?`
+                for (const item of result_list) {
+                    var sqlArrp = [item.add_inte, item.id, item.activ_id]
                     dbConfig.sqlConnect(sqlp, sqlArrp)
                 }
                 res.send({
@@ -417,7 +416,7 @@ let removeuser = async (req, res) => {
     let sqlexamine = `DELETE FROM examine WHERE id=?`
     let sqlaccount = `DELETE FROM account WHERE id=?`
     let sqlArr = [id]
-    //可优化，减少sql执行条数
+    //可通过触发器优化，减少sql执行条数
     try {
         const resutl1 = await dbConfig.SySqlConnect(sqlawards, sqlArr);
         const resutl2 = await dbConfig.SySqlConnect(sqldetails, sqlArr);
@@ -466,6 +465,7 @@ let exsub = (req, res) => {
             let aw_prize = req.body.ex_li
             let branch = req.body.branch
             let aw_name = req.body.ex_name
+            //可通过触发器来更新用户积分增加
             let sqly = `UPDATE personal SET integral=integral+? WHERE id=?`
             let sqlArry = [branch, id]
             let sqla = `INSERT INTO awards(id, aw_name, aw_prize, aw_time, aw_addinte) VALUES (?,?,?,?,?)`
