@@ -145,4 +145,35 @@ router.get('/downloadex', (req, res) => {
   });
 })
 
+//用户提交审核提交的文件
+router.post('/uploadimage', multer({
+  //设置文件存储路径
+  dest: 'public/head_image'   //uploadex文件如果不存在则会自己创建一个。
+}).single('file'), function (req, res, next) {
+  if (req.file.length === 0) {  //判断一下文件是否存在，也可以在前端代码中进行判断。
+      res.render("error", { message: "上传文件不能为空！" });
+      return
+  } else {
+      let file = req.file;
+      const fileexname = req.body.id
+      const filetype = file.originalname.split('.')[file.originalname.split('.').length - 1]
+      if(filetype == 'jpg' || filetype == 'png') {
+        //暂时保存在服务端的临时文件改名为对应用户参加活动的文件名保存在服务端
+        fs.renameSync('./public/head_image/' + file.filename, './public/head_image/' + `user_img${fileexname}.${filetype}`);  //可以根据喜爱命名方式，更改文件名称
+        res.send({
+            code: 200,
+            msg: '上传成功'
+        })
+      } else {
+        //上传文件不符合类型要求，删除上传暂时保存在服务端的临时文件
+        fs.unlinkSync('./public/head_image/' + file.filename)
+        res.send({
+          code: 406,
+          msg: '上传文件错误'
+        })
+      }
+  }
+})
+
+
 module.exports = router
