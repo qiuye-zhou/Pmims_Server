@@ -45,7 +45,6 @@ module.exports = {
                         conn.release();
                     });
                 }
-
             })
         }).catch((err) => {
             console.log(err);
