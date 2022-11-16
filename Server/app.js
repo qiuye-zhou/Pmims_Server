@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 var fileRouter = require('./routes/file')
+var bigdataRouter = require('./routes/bigData')
 
 var app = express();
 
@@ -71,8 +72,9 @@ app.use((req, res, next) => {
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/admin', adminRouter)
-app.use('/file', fileRouter)
+app.use('/admin', adminRouter);
+app.use('/file', fileRouter);
+app.use('/bigdata', bigdataRouter);
 
 
 // catch 404 and forward to error handler
