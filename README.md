@@ -14,5 +14,3 @@ npm install
 ```
 npm start
 ```
-
-前端项目地址：https://github.com/zhou130258/Pmims
